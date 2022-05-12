@@ -7,19 +7,6 @@
 
 import SwiftUI
 
-let nightlyTasks = [
-   "Check all windows",
-   "Check all doors",
-   "Check that the safe is locked",
-   "Inspect the mailbox",
-   "Inspect security cameras",
-   "Clear ice from sidewalks",
-   "Document \"strange and unusual\" occurrences"
-]
-
-let weeklyTasks = [
-]
-
 struct ContentView: View {
     var body: some View {
         VStack {
@@ -41,13 +28,13 @@ struct ContentView: View {
                                 .textCase(.uppercase)
                             
                         }
-                        Text("- ")
-                        Text("- ")
-                        Text("- ")
-                        Text("- ")
-                        Text("- ")
-                        Text("- ")
-                        Text("- ")
+                        Text("- Check all windows")
+                        Text("- Check all doors")
+                        Text("- Check that the safe is locked")
+                        Text("- Inspect the mailbox")
+                        Text("- Inspect security cameras")
+                        Text("- Clear ice from sidewalks")
+                        Text("- Document \"strange and unusual\" occurrences")
                     }
                     // MARK: Weekly Tasks
                     Group {
