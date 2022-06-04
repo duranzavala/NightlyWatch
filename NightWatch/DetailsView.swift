@@ -8,16 +8,14 @@
 import SwiftUI
 
 struct DetailsView: View {
-    @State private var theTask = Task(name: "Check all windows", isComplete: false, lastCompleted: nil)
+    @Binding var task: Task
+//    @State private var theTask = Task(name: "Check all windows", isComplete: false, lastCompleted: nil)
     
     var body: some View {
         VStack {
-            HStack {
-                // Checkmark IF complete
-                Image(systemName: theTask.isComplete ? "checkmark.square" : "square")
-                Text("\(theTask.name)")
-            }
-            ControlPanel(theTask: $theTask)
+            Text(task.name)
+            Text("Placeholder for task description")
+            ControlPanel(theTask: $task)
         }
     }
 }
@@ -26,24 +24,23 @@ struct ControlPanel: View {
     @Binding var theTask: Task
     
     var body: some View {
-        if theTask.isComplete == false {
-            Button(action: {
-                theTask.isComplete = true
-            }) {
-                Text("Mark Complete")
-            }.padding(.top)
-        } else {
+        if theTask.isComplete {
             Button(action: {
                 theTask.isComplete = false
             }) {
                 Text("Reset")
             }.padding(.top)
+        } else {
+            Button("Mark Complete") {
+                theTask.isComplete = true
+            }
+            .padding(.top)
         }
     }
 }
 
 struct DetailsView_Previews: PreviewProvider {
     static var previews: some View {
-        DetailsView()
+        DetailsView(task: Binding<Task>.constant(Task(name: "Test Task", isComplete: false, lastCompleted: nil)))
     }
 }

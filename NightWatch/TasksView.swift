@@ -7,45 +7,67 @@
 
 import SwiftUI
 
-let nightlyTasks = [
-   "Check all windows",
-   "Check all doors",
-   "Check that the safe is locked",
-   "Inspect the mailbox",
-   "Inspect security cameras",
-   "Clear ice from sidewalks",
-   "Document \"strange and unusual\" occurrences",
-]
-
-let weeklyTasks = [
-    "Check inside all vacant rooms",
-    "Walk the perimeter of property",
-]
-
-let monthlyTasks = [
-    "Test security alarm",
-    "Test motion detectos",
-    "Test smoke alarms",
-]
-
 struct TasksView: View {
+    @ObservedObject var nightWatchTasks: NightWatchTask
     
     var body: some View {
         NavigationView {
             List {
                 Section(header: TaskSectionHeader(symbolSystemName: "moon.stars", headerText: "Nightly Tasks")) {
-                    ForEach(nightlyTasks, id: \.self, content: { taskName in
-                        NavigationLink(taskName, destination: DetailsView())
+                    // Get both task and its index in an array
+                    let taskIndices = nightWatchTasks.nightlyTasks.indices
+                    let tasks = nightWatchTasks.nightlyTasks
+                    let taskIndexPairs = Array(zip(tasks, taskIndices))
+                    
+                    ForEach(taskIndexPairs, id: \.0.id, content: { task, taskIndex in
+                        // Get an instance of nightWatchTasks
+                        let nightWatchTaskWrapper = $nightWatchTasks
+
+                        // Make binding using the wrapper
+                        let taskBinding = nightWatchTaskWrapper.nightlyTasks
+                        
+                        // Extract the task
+                        let theTasksBinding = taskBinding[taskIndex]
+                        
+                        NavigationLink(destination: DetailsView(task: theTasksBinding), label: { TaskRow(task: task) })
                     })
                 }
                 Section(header: TaskSectionHeader(symbolSystemName: "sunset", headerText: "Weekly Tasks")) {
-                    ForEach(weeklyTasks, id: \.self, content: { taskName in
-                        NavigationLink(taskName, destination: DetailsView())
+                        // Get both task and its index in an array
+                        let taskIndices = nightWatchTasks.weeklyTasks.indices
+                        let tasks = nightWatchTasks.weeklyTasks
+                        let taskIndexPairs = Array(zip(tasks, taskIndices))
+                        
+                        ForEach(taskIndexPairs, id: \.0.id, content: { task, taskIndex in
+                        // Get an instance of nightWatchTasks
+                        let nightWatchTaskWrapper = $nightWatchTasks
+                        
+                        // Make binding using the wrapper
+                        let taskBinding = nightWatchTaskWrapper.weeklyTasks
+                        
+                        // Extract the task
+                        let theTasksBinding = taskBinding[taskIndex]
+                        
+                        NavigationLink(destination: DetailsView(task: theTasksBinding), label: { TaskRow(task: task) })
                     })
                 }
                 Section(header: TaskSectionHeader(symbolSystemName: "calendar", headerText: "Monthly Tasks")) {
-                    ForEach(monthlyTasks, id: \.self, content: { taskName in
-                        NavigationLink(taskName, destination: DetailsView())
+                        // Get both task and its index in an array
+                        let taskIndices = nightWatchTasks.monthlyTasks.indices
+                        let tasks = nightWatchTasks.monthlyTasks
+                        let taskIndexPairs = Array(zip(tasks, taskIndices))
+                        
+                        ForEach(taskIndexPairs, id: \.0.id, content: { task, taskIndex in
+                        // Get an instance of nightWatchTasks
+                        let nightWatchTaskWrapper = $nightWatchTasks
+                        
+                        // Make binding using the wrapper
+                        let taskBinding = nightWatchTaskWrapper.monthlyTasks
+                        
+                        // Extract the task
+                        let theTasksBinding = taskBinding[taskIndex]
+                        
+                        NavigationLink(destination: DetailsView(task: theTasksBinding), label: { TaskRow(task: task) })
                     })
                 }
             }
@@ -68,8 +90,30 @@ struct TaskSectionHeader: View {
     }
 }
 
+struct TaskRow: View {
+    let task: Task
+    
+    var body: some View {
+        VStack {
+            if task.isComplete {
+                HStack {
+                    Image(systemName: "checkmark.square")
+                    Text(task.name)
+                        .foregroundColor(.gray)
+                        .strikethrough()
+                }
+            } else {
+                HStack {
+                    Image(systemName: "square")
+                    Text(task.name)
+                }
+            }
+        }
+    }
+}
+
 struct TasksView_Previews: PreviewProvider {
     static var previews: some View {
-        TasksView()
+        TasksView(nightWatchTasks: NightWatchTask())
     }
 }

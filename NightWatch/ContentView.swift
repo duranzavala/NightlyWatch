@@ -8,12 +8,16 @@
 import SwiftUI
 
 struct ContentView: View {
+    @EnvironmentObject var theGuard: Guard
+    @StateObject var nightWatchTasks = NightWatchTask()
+
     var body: some View {
         TabView {
-            TasksView().tabItem({
-                Image(systemName: "checklist")
-                Text("Tasks")
-            })
+            TasksView(nightWatchTasks: nightWatchTasks)
+                .tabItem({
+                    Image(systemName: "checklist")
+                    Text("Tasks")
+                })
                 
             ProfileView().tabItem({
                 Image(systemName: "person")
@@ -25,6 +29,9 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
+        let previewGuard = Guard(name: "Arnulfo", age: 25, isTasksCompleted: false)
+        
         ContentView()
+            .environmentObject(previewGuard)
     }
 }

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ProfileView: View {
-    @StateObject private var theGuard = Guard(name: "Arnulfo", age: 25, isTasksCompleted: false)
+    @EnvironmentObject var theGuard: Guard
     
     var body: some View {
         VStack {
@@ -17,12 +17,12 @@ struct ProfileView: View {
                 .fontWeight(.heavy)
                 .foregroundColor(.blue)
             
-            InformationPanel(theGuard: self.theGuard)
+            InformationPanel()
             
             Button(action: {
                 self.theGuard.isTasksCompleted = !self.theGuard.isTasksCompleted
             }) {
-                Text(self.theGuard.isTasksCompleted ? "Mark as NOT completed" : "Mark as completed")
+                Text(theGuard.isTasksCompleted ? "Mark as NOT completed" : "Mark as completed")
                     .font(.title3)
             }
             .foregroundColor(.blue)
@@ -36,7 +36,7 @@ struct ProfileView: View {
 }
 
 struct InformationPanel: View {
-    @ObservedObject var theGuard: Guard
+    @EnvironmentObject var theGuard: Guard
 
     var body: some View {
         VStack {
@@ -71,6 +71,9 @@ struct InformationPanel: View {
 
 struct Profile_Previews: PreviewProvider {
     static var previews: some View {
+        let previewGuard = Guard(name: "Arnulfo", age: 25, isTasksCompleted: false)
+        
         ProfileView()
+            .environmentObject(previewGuard)
     }
 }
