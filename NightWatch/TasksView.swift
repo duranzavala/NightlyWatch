@@ -146,6 +146,7 @@ struct TaskSectionHeader: View {
             Text(headerText)
         }
         .font(.title3)
+        .foregroundColor(.accentColor)
     }
 }
 
@@ -173,6 +174,11 @@ struct TaskRow: View {
 
 struct TasksView_Previews: PreviewProvider {
     static var previews: some View {
-        TasksView(nightWatchTasks: NightWatchTask(), isFocusModeOn: false)
+        Group {
+            TasksView(nightWatchTasks: NightWatchTask(), isFocusModeOn: false)
+            
+            TasksView(nightWatchTasks: NightWatchTask(), isFocusModeOn: false)
+                .preferredColorScheme(.dark)
+        }
     }
 }

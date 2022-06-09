@@ -18,6 +18,7 @@ struct DetailsView: View {
                 .aspectRatio(contentMode: .fit)
             
             Text(task.name)
+                .font(.title)
             
             if verticalSizeClass == .regular {
                 Divider()

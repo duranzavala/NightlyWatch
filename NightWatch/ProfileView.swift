@@ -15,7 +15,7 @@ struct ProfileView: View {
             Text("Guard Information")
                 .font(.largeTitle)
                 .fontWeight(.heavy)
-                .foregroundColor(.blue)
+                .foregroundColor(.black)
             
             InformationPanel()
             
@@ -25,13 +25,12 @@ struct ProfileView: View {
                 Text(theGuard.isTasksCompleted ? "Mark as NOT completed" : "Mark as completed")
                     .font(.title3)
             }
-            .foregroundColor(.blue)
             .padding(.top)
             
             Spacer()
         }
-        .foregroundColor(.gray)
         .padding()
+        .foregroundColor(.accentColor)
     }
 }
 
@@ -65,6 +64,7 @@ struct InformationPanel: View {
             }
         }
         .font(.title3)
+        .foregroundColor(.gray)
         .padding()
     }
 }
