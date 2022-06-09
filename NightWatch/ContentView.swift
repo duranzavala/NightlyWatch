@@ -13,7 +13,7 @@ struct ContentView: View {
 
     var body: some View {
         TabView {
-            TasksView(nightWatchTasks: nightWatchTasks)
+            TasksView(nightWatchTasks: nightWatchTasks, isFocusModeOn: false)
                 .tabItem({
                     Image(systemName: "checklist")
                     Text("Tasks")

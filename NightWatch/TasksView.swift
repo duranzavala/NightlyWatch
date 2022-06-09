@@ -9,6 +9,8 @@ import SwiftUI
 
 struct TasksView: View {
     @ObservedObject var nightWatchTasks: NightWatchTask
+    @State var isFocusModeOn: Bool = false
+    @State var isResetAlertShowing: Bool = false
     
     var body: some View {
         NavigationView {
@@ -29,8 +31,16 @@ struct TasksView: View {
                         // Extract the task
                         let theTasksBinding = taskBinding[taskIndex]
                         
-                        NavigationLink(destination: DetailsView(task: theTasksBinding), label: { TaskRow(task: task) })
+                        if isFocusModeOn == false || (isFocusModeOn && task.isComplete == false) {
+                            NavigationLink(destination: DetailsView(task: theTasksBinding), label: { TaskRow(task: task) })
+                        }
                     })
+                        .onDelete(perform: { indexSet in
+                            nightWatchTasks.nightlyTasks.remove(atOffsets: indexSet)
+                        })
+                        .onMove { indices, newOffset in
+                            nightWatchTasks.nightlyTasks.move(fromOffsets: indices, toOffset: newOffset)
+                        }
                 }
                 Section(header: TaskSectionHeader(symbolSystemName: "sunset", headerText: "Weekly Tasks")) {
                         // Get both task and its index in an array
@@ -48,8 +58,16 @@ struct TasksView: View {
                         // Extract the task
                         let theTasksBinding = taskBinding[taskIndex]
                         
-                        NavigationLink(destination: DetailsView(task: theTasksBinding), label: { TaskRow(task: task) })
+                        if isFocusModeOn == false || (isFocusModeOn && task.isComplete == false) {
+                            NavigationLink(destination: DetailsView(task: theTasksBinding), label: { TaskRow(task: task) })
+                        }
                     })
+                        .onDelete(perform: { indexSet in
+                            nightWatchTasks.weeklyTasks.remove(atOffsets: indexSet)
+                        })
+                        .onMove { indices, newOffset in
+                            nightWatchTasks.weeklyTasks.move(fromOffsets: indices, toOffset: newOffset)
+                        }
                 }
                 Section(header: TaskSectionHeader(symbolSystemName: "calendar", headerText: "Monthly Tasks")) {
                         // Get both task and its index in an array
@@ -67,13 +85,54 @@ struct TasksView: View {
                         // Extract the task
                         let theTasksBinding = taskBinding[taskIndex]
                         
-                        NavigationLink(destination: DetailsView(task: theTasksBinding), label: { TaskRow(task: task) })
+                        if isFocusModeOn == false || (isFocusModeOn && task.isComplete == false) {
+                            NavigationLink(destination: DetailsView(task: theTasksBinding), label: { TaskRow(task: task) })
+                        }
                     })
+                        .onDelete(perform: { indexSet in
+                            nightWatchTasks.monthlyTasks.remove(atOffsets: indexSet)
+                        })
+                        .onMove { indices, newOffset in
+                            nightWatchTasks.monthlyTasks.move(fromOffsets: indices, toOffset: newOffset)
+                        }
                 }
             }
             .listStyle(GroupedListStyle())
             .navigationTitle("Home")
-        }
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    EditButton()
+                }
+                
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Reset") {
+                        isResetAlertShowing = true
+                    }
+                }
+                
+                ToolbarItemGroup(placement: .bottomBar) {
+                    Spacer()
+                    Toggle(isOn: $isFocusModeOn) {
+                        Text("Focus Mode")
+                    }
+                    Spacer()
+                }
+            }
+        }.alert(isPresented: $isResetAlertShowing, content: {
+            Alert(
+                title: Text("Reset List"),
+                message: Text("Are you sure?"),
+                primaryButton: .cancel(),
+                secondaryButton: .destructive(
+                    Text("Yes, reset it"),
+                    action: {
+                        let refreshNightWatchTasks = NightWatchTask()
+                        self.nightWatchTasks.nightlyTasks = refreshNightWatchTasks.nightlyTasks
+                        self.nightWatchTasks.weeklyTasks = refreshNightWatchTasks.weeklyTasks
+                        self.nightWatchTasks.monthlyTasks = refreshNightWatchTasks.monthlyTasks
+                    })
+            )
+        })
     }
 }
 
@@ -114,6 +173,6 @@ struct TaskRow: View {
 
 struct TasksView_Previews: PreviewProvider {
     static var previews: some View {
-        TasksView(nightWatchTasks: NightWatchTask())
+        TasksView(nightWatchTasks: NightWatchTask(), isFocusModeOn: false)
     }
 }

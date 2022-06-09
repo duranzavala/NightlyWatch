@@ -9,12 +9,22 @@ import SwiftUI
 
 struct DetailsView: View {
     @Binding var task: Task
-//    @State private var theTask = Task(name: "Check all windows", isComplete: false, lastCompleted: nil)
+    @Environment(\.verticalSizeClass) var verticalSizeClass
     
     var body: some View {
         VStack {
+            Image("FloorPlan")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+            
             Text(task.name)
-            Text("Placeholder for task description")
+            
+            if verticalSizeClass == .regular {
+                Divider()
+                Text("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesett ing, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.")
+                Divider()
+            }
+            
             ControlPanel(theTask: $task)
         }
     }
@@ -42,5 +52,6 @@ struct ControlPanel: View {
 struct DetailsView_Previews: PreviewProvider {
     static var previews: some View {
         DetailsView(task: Binding<Task>.constant(Task(name: "Test Task", isComplete: false, lastCompleted: nil)))
+            .previewInterfaceOrientation(.portrait)
     }
 }
